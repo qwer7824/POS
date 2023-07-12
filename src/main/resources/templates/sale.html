@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Heroic Features - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="/bootstrap/assets/favicon.ico"/>
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/bootstrap/css/styles.css" rel="stylesheet"/>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        #body-wrapper {
+            min-height: 100%;
+            position: relative;
+        }
+
+        #content {
+            margin: 10px auto;
+        }
+        #delete-btn{
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div id="body-wrapper">
+    <!-- Responsive navbar-->
+    <th:block th:replace="fragments/navbar :: navbarFragment"></th:block>
+    <div id="content">
+        <div class="container">
+            <div >
+                <h3 th:text="${hid}+'번 테이블'"></h3>
+            </div>
+            <div class="row">
+                <div style="overflow-y: scroll; width:50%; height:500px;">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>제품이름</th>
+                            <th>가격</th>
+                            <th>수량</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="product : ${productList}">
+                            <th th:text="${product.getName()}"></th>
+                            <th th:text="${product.getPrice()}"></th>
+                            <th th:text="${product.getCount()}"></th>
+                            <form method="post" th:action="@{'/sale/add/' + ${hid}}">
+                                <input type="text" id="pid" name="pid" th:value="${product.getId()}" hidden>
+                               <th><button type="submit" class="btn btn-primary">추가하기</button></th>
+                            </form>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            <br>
+
+            <br>
+                <div style="overflow-y: scroll; width:50%; height:500px;">
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>제품이름</th>
+                            <th>가격</th>
+                            <th>수량</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="sale : ${saleCartDetailList}">
+                            <th th:text="${sale.getName()}"></th>
+                            <th th:text="${sale.getPrice()*sale.getCount()}"></th>
+                            <th th:text="${sale.getCount()}"></th>
+                            <form th:action="@{'/sale/addEA/'+${hid} + '/' + ${sale.getPid()}}" method="post">
+                                <th><button id="addEA-btn" class="btn btn-primary">+</button></th>
+                            </form>
+                            <form th:action="@{'/sale/deleteEA/'+${hid} + '/' + ${sale.getPid()}}" method="post">
+                                <th><button id="deleteEA-btn" class="btn btn-primary">-</button></th>
+                            </form>
+                            <form th:action="@{'/sale/delete/'+${hid} + '/' + ${sale.getPid()}}" method="post">
+                                <th><button id="delete-btn" class="btn btn-primary">삭제</button></th>
+                            </form>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div>
+                <h5 th:text="|총 계산금액 : ${totalCost}원|"></h5>
+                <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    계산하기
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">계산확인</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h5 th:text="|총 계산금액 ${totalCost}원을 계산하시겠습니까?|"></h5>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <a href="/sale/calculate" class="btn btn-primary btn-lg">계산하기</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <!-- Footer-->
+
+</div>
+
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="/bootstrap/js/scripts.js"></script>
+</body>
+</html>
