@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Heroic Features - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="/bootstrap/assets/favicon.ico"/>
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/bootstrap/css/styles.css" rel="stylesheet"/>
+    <style>
+        body, html{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        #body-wrapper {
+            min-height: 100%;
+            position: relative;
+        }
+        #content{
+            margin-left: 10%;
+            margin-right: 10%;
+            margin-top: 100px;
+            padding-bottom: 300px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+            padding-left: 0.75rem;
+        }
+        .msg{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="body-wrapper">
+    <th:block th:replace="fragments/navbar :: navbarFragment"></th:block>
+
+    <!-- Responsive navbar-->
+    <div id="content">
+
+        <div class="py-5 text-center">
+            <h2>새로운 제품 입고</h2>
+        </div>
+
+        <div class="container">
+            <h4 class="mb-3">제품 정보 입력</h4>
+            <form action="/new" method="post" th:object="${product}">
+                <input type="text" hidden id="sell" name="sell" value="1"/>
+                <div class="row mb-3">
+                    <label for="name" class="col-sm-2 col-form-label">제품명</label>
+                    <div class="col-sm-10">
+                        <input type="text" th:field="*{name}"
+                               th:errorclass="field-error" class="form-control" id="name" name="name">
+                    </div>
+                    <div class="field-error msg" th:errors="*{name}">
+                        이름 오류
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="price" class="col-sm-2 col-form-label">가격</label>
+                    <div class="col-sm-10">
+                        <input type="text" th:field="*{price}"
+                               th:errorclass="field-error" class="form-control" id="price" name="price">
+                    </div>
+                    <div class="field-error msg" th:errors="*{price}">
+                        가격 오류
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="count" class="col-sm-2 col-form-label">수량</label>
+                    <div class="col-sm-10">
+                        <input type="text" th:field="*{count}"
+                               th:errorclass="field-error" class="form-control" id="count" name="count">
+                    </div>
+                    <div class="field-error msg" th:errors="*{count}">
+                        수량 오류
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">제품 추가</button>
+            </form>
+        </div>
+    </div>
+    <!-- Footer-->
+</div>
+
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="/bootstrap/js/scripts.js"></script>
+</body>
+</html>
