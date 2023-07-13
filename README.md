@@ -1,4 +1,4 @@
-![3](https://github.com/qwer7824/POS/assets/8233989/0a8dc706-7861-44da-9101-097b3f916ae2)# POS
+# POS
 
 
 <h3>테이블 수 조정</h3>
