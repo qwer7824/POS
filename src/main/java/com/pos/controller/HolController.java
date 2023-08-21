@@ -3,8 +3,10 @@ package com.pos.controller;
 import com.pos.entity.Hol;
 import com.pos.entity.SaleCart;
 import com.pos.repository.HolRepository;
+import com.pos.repository.SaleCartRepository;
 import com.pos.service.HolService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,15 +18,17 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class HolController {
     private final HolService holService;
+    private final SaleCartRepository saleCartRepository;
 
     @GetMapping(value = "/")
-    public String main(Model model){
+    public String main(Model model) {
         List<Hol> hols = holService.holList();
         int size = hols.size();
-        model.addAttribute("hols",hols);
-        model.addAttribute("size",size);
+        model.addAttribute("hols", hols);
+        model.addAttribute("size", size);
         return "main";
     }
 
@@ -34,8 +38,10 @@ public class HolController {
         return "redirect:/";
     }
     @PostMapping("/deleteHol/{hid}")
-    public String deleteHol(@PathVariable Long hid){
+    public String deleteHol(@PathVariable int hid){
         holService.deleteHol(hid);
         return "redirect:/";
     }
+
+
 }

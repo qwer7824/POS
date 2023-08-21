@@ -17,7 +17,7 @@ public class SaleCart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long hid;
+    private int hid;
     private Long pid;
     private int count;
 

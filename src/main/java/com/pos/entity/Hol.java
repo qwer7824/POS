@@ -8,6 +8,6 @@ import lombok.*;
 @Getter
 public class Hol {
     @Id
-    Long id;
+    int id;
+    }
 
-}
