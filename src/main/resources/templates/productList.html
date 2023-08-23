@@ -40,7 +40,7 @@
     <div id="content">
 
         <div class="py-5 text-center">
-            <h2>재고 현황</h2>
+            <h2>상품 현황</h2>
         </div>
 
         <div>
@@ -62,7 +62,6 @@
                     <td th:text="${product.getName()}"></td>
                     <td th:text="${product.getPrice()}"></td>
                     <td th:text="${product.getCount()}"></td>
-                    <td><a th:href="@{'/update/' + ${product.getId()}}" th:text="수정">수정</a></td>
                 </tr>
                 </tbody>
 

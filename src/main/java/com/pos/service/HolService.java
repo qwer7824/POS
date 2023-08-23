@@ -24,14 +24,14 @@ public class HolService {
     }
 
     public void addHol() {
-        Long size = (long) holList().size();
+        int size = holList().size();
         Hol hol = new Hol();
         hol.setId(size+1);
         holRepository.save(hol);
     }
 
     @Transactional
-    public void deleteHol(Long id){
+    public void deleteHol(int id){
         List<SaleCart> saleCarts = saleCartRepository.findByHid(id);
 
         if (saleCarts.isEmpty()) {

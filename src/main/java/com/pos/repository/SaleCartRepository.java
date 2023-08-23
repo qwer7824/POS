@@ -9,10 +9,12 @@ import java.util.List;
 @Repository
 public interface SaleCartRepository extends JpaRepository<SaleCart, Long> {
 
-    List<SaleCart> findByHid(Long hid);
+    List<SaleCart> findByHid(int hid);
 
-    SaleCart findByHidAndPid(Long hid, Long pid);
+    SaleCart findByHidAndPid(int hid, Long pid);
 
-    void deleteByHidAndPid(Long hid, Long pid);
+    void deleteByHidAndPid(int hid, Long pid);
+
+    void deleteByHid(int hid);
 
 }

@@ -43,12 +43,4 @@ public class ProductController {
 
         return "redirect:list";
     }
-
-    @GetMapping(value = "/update/{productId}")
-    public String updateProductForm(@PathVariable Long productId, Model model){
-        Product product = productService.findById(productId);
-        model.addAttribute("product",product);
-
-        return "updateProductForm";
-    }
 }

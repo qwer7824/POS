@@ -16,7 +16,6 @@ public class SaleCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private int hid;
     private Long pid;
     private int count;
@@ -26,5 +25,17 @@ public class SaleCart {
     }
     public void addCount(int count){
         this.count = count + 1;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SaleCartDetail {
+        private Long hid;
+        private Long pid;
+        private String name;
+        private int price;
+        private int count;
     }
 }
