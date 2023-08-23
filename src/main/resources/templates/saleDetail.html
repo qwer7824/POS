@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Heroic Features - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="/bootstrap/assets/favicon.ico"/>
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/bootstrap/css/styles.css" rel="stylesheet"/>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        #body-wrapper {
+            min-height: 100%;
+            position: relative;
+        }
+
+        #content {
+            margin-left: 10%;
+            margin-right: 10%;
+            margin-top: 100px;
+            padding-bottom: 300px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="body-wrapper">
+    <!-- Responsive navbar-->
+    <th:block th:replace="fragments/navbar :: navbarFragment"></th:block>
+    <div id="content">
+
+        <h3 th:text="|총 판매 가격 : ${money}원|"></h3>
+        <h3 th:text="|총 판매 수량 : ${totalCount}개|"></h3>
+        <h3 th:text="|판매 시간 : ${#temporals.format(sale.getDatetime, 'yyyy-MM-dd HH:mm:ss')}|"></h3>
+        <hr>
+        <br><br>
+        <h1>판매 물품 상세</h1>
+        <table class="table">
+            <tr>
+                <th>제품 이름</th>
+                <th>제품 가격</th>
+                <th>판매 수량</th>
+            </tr>
+            <tr th:each="saleDetail : ${saleDetails}">
+                <th th:text="${saleDetail.getName()}"/>
+                <th th:text="${saleDetail.getPrice()}"/>
+                <th th:text="${saleDetail.getCount()}"/>
+            </tr>
+        </table>
+
+
+    </div>
+</div>
+
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="/bootstrap/js/scripts.js"></script>
+</body>
+</html>

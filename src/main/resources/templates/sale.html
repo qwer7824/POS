@@ -118,7 +118,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <a href="/sale/calculate" class="btn btn-primary btn-lg">계산하기</a>
+                                <a th:onclick="|location.href='@{/sale/calculate/}'+${hid}|" class="btn btn-primary btn-lg">계산하기</a>
                             </div>
                         </div>
                     </div>

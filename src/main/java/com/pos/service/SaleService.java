@@ -1,14 +1,14 @@
 package com.pos.service;
 
-import com.pos.entity.Product;
-import com.pos.entity.SaleCart;
-import com.pos.repository.ProductRepository;
-import com.pos.repository.SaleCartRepository;
+import com.pos.entity.*;
+import com.pos.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -18,14 +18,16 @@ public class SaleService {
 
     private final SaleCartRepository saleCartRepository;
     private final ProductRepository productRepository;
+    private final SaleDetailRepository saleDetailRepository;
+    private final SaleRepository saleRepository;
 
-    public List<SaleCart> findByCartByHid(Long hid){
+    public List<SaleCart> findByCartByHid(int hid){
         return saleCartRepository.findByHid(hid);
     }
 
 
     @Transactional
-    public void addCart(Long hid, Long pid, int count){
+    public void addCart(int hid, Long pid, int count){
         SaleCart saleCart = saleCartRepository.findByHidAndPid(hid,pid);
         if(saleCart==null){
         saleCartRepository.save(saleCart.builder()
@@ -47,7 +49,7 @@ public class SaleService {
     }
 
     @Transactional
-    public void deleteSaleCart(Long hid, Long pid){
+    public void deleteSaleCart(int hid, Long pid){
         // get
         SaleCart saleCart = saleCartRepository.findByHidAndPid(hid,pid);
         // product add
@@ -59,7 +61,7 @@ public class SaleService {
     }
 
     @Transactional
-    public void deleteEASaleCart(Long hid, Long pid) {
+    public void deleteEASaleCart(int hid, Long pid) {
         SaleCart saleCart = saleCartRepository.findByHidAndPid(hid,pid);
 
         Product product = productRepository.findById(pid).orElse(null);
@@ -78,9 +80,9 @@ public class SaleService {
     }
 
     @Transactional
-    public void addEASaleCart(Long hid, Long pid) {
+    public void addEASaleCart(int hid, Long pid) {
         SaleCart saleCart = saleCartRepository.findByHidAndPid(hid,pid);
-        Product product = productRepository.findById(pid).orElse(null);
+        Product product = productRepository.findById(pid).orElseThrow(null);
 
         if(product.getCount() == 0){
 
@@ -92,5 +94,29 @@ public class SaleService {
             update.addCount(saleCart.getCount());
             saleCartRepository.save(update);
         }
+    }
+
+    @Transactional
+    public void sale(int hid){
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        int totalCost = 0;
+        List<SaleCart> saleCartList = saleCartRepository.findByHid(hid);
+        System.out.println(saleCartList);
+
+        for(int i=0;i<saleCartList.size();i++){
+            Product product = productRepository.findById(saleCartList.get(i).getPid()).orElseThrow(null);
+            totalCost += (product.getPrice()*saleCartList.get(i).getCount());
+        }
+
+        Sale sale = new Sale(hid, totalCost, currentDateTime);
+        saleRepository.save(sale);
+
+        for(int i=0;i<saleCartList.size();i++) {
+            Product product = productRepository.findById(saleCartList.get(i).getPid()).orElseThrow(null);
+            SaleDetail saleDetail = new SaleDetail(sale.getId(), product.getId(), product.getName(),
+                    product.getPrice(), saleCartList.get(i).getCount());
+            saleDetailRepository.save(saleDetail);
+        }
+        saleCartRepository.deleteByHid(hid);
     }
 }
