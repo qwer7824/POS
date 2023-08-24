@@ -53,7 +53,7 @@
             </tr>
             <tr th:each="saleDetail : ${saleDetails}">
                 <th th:text="${saleDetail.getName()}"/>
-                <th th:text="${saleDetail.getPrice()}"/>
+                <th data-th-text="${#numbers.formatInteger(saleDetail.getPrice(), 1, 'COMMA') + '원'}"/>
                 <th th:text="${saleDetail.getCount()}"/>
             </tr>
         </table>
