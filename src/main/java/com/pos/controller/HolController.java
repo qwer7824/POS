@@ -21,7 +21,6 @@ import java.util.List;
 @Slf4j
 public class HolController {
     private final HolService holService;
-    private final SaleCartRepository saleCartRepository;
 
     @GetMapping(value = "/")
     public String main(Model model) {

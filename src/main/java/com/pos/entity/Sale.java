@@ -18,18 +18,16 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Sale {
+public class Sale extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int hid;
     private int price;
-    private LocalDateTime datetime;
 
-    public Sale(int hid, int price, LocalDateTime datetime) {
+    public Sale(int hid, int price) {
         this.hid = hid;
         this.price = price;
-        this.datetime = datetime;
     }
 
 }

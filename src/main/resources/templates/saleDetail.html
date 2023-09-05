@@ -41,7 +41,7 @@
 
         <h3 th:text="|총 판매 가격 : ${money}원|"></h3>
         <h3 th:text="|총 판매 수량 : ${totalCount}개|"></h3>
-        <h3 th:text="|판매 시간 : ${#temporals.format(sale.getDatetime, 'yyyy-MM-dd HH:mm:ss')}|"></h3>
+        <h3 th:text="|판매 시간 : ${#temporals.format(sale.getCreatedDateTime(), 'yyyy-MM-dd HH:mm:ss')}|"></h3>
         <hr>
         <br><br>
         <h1>판매 물품 상세</h1>

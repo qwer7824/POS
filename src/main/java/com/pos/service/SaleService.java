@@ -98,7 +98,6 @@ public class SaleService {
 
     @Transactional
     public void sale(int hid){
-        LocalDateTime currentDateTime = LocalDateTime.now();
         int totalCost = 0;
         List<SaleCart> saleCartList = saleCartRepository.findByHid(hid);
         System.out.println(saleCartList);
@@ -108,7 +107,7 @@ public class SaleService {
             totalCost += (product.getPrice()*saleCartList.get(i).getCount());
         }
 
-        Sale sale = new Sale(hid, totalCost, currentDateTime);
+        Sale sale = new Sale(hid, totalCost);
         saleRepository.save(sale);
 
         for(int i=0;i<saleCartList.size();i++) {
