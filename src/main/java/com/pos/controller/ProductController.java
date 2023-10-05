@@ -37,10 +37,7 @@ public class ProductController {
 
     @PostMapping(value = "/new")
     public String addNewProduct(@Validated @ModelAttribute("product") ProductDto product) {
-
-        Product newProduct = new Product(product.getName(), product.getPrice(), product.getCount());
-        productService.addNewProduct(newProduct);
-
+        productService.addNewProduct(product);
         return "redirect:list";
     }
 }

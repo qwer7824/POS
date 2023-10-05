@@ -1,5 +1,6 @@
 package com.pos.service;
 
+import com.pos.dto.ProductDto;
 import com.pos.entity.Product;
 import com.pos.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +18,7 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product findById(Long id){
-        return productRepository.findById(id).orElse(null);
-    }
-
-    public Product addNewProduct(Product newProduct) {
+    public Product addNewProduct(ProductDto newProduct) {
         return productRepository.save(Product.builder()
                         .name(newProduct.getName())
                         .price(newProduct.getPrice())
