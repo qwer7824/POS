@@ -5,6 +5,7 @@ import com.pos.entity.SaleCart;
 import com.pos.repository.HolRepository;
 import com.pos.repository.SaleCartRepository;
 import com.pos.service.HolService;
+import com.pos.service.SaleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ import java.util.List;
 @Slf4j
 public class HolController {
     private final HolService holService;
+    private final SaleService saleService;
 
     @GetMapping(value = "/")
     public String main(Model model) {
@@ -28,6 +30,9 @@ public class HolController {
         int size = hols.size();
         model.addAttribute("hols", hols);
         model.addAttribute("size", size);
+
+        List<SaleCart> saleCart = saleService.findSaleCart();
+        model.addAttribute("saleCart", saleCart);
         return "main";
     }
 

@@ -32,17 +32,24 @@
         }
     </style>
 </head>
+
 <body>
 <div id="body-wrapper">
     <th:block th:replace="fragments/navbar :: navbarFragment"></th:block>
     <th:block th:replace="fragments/hol :: navbarFragment(${size})"></th:block>
     <div id=".content">
-        <div class="row text-center" style="float: none">
-            <div class="col-4" style="float: none" th:each="hols :  ${hols}" th:onclick="|location.href='@{/sale/}'+${hols.getId()}|">
-                <p th:text="${hols.getId()} + '번 테이블'"></p>
+        <div class="row text-center">
+            <div class="col-4" th:each="hol : ${hols}" th:onclick="|location.href='@{/sale/}'+${hol.getId()}|">
+                <p th:text="${hol.getId()} + '번 테이블'"></p>
                 <hr>
+                <div style="overflow-y: scroll; max-height: calc(100% - 60px);">
+                    <div th:each="sale : ${saleCart}" th:if="${sale.hol.id} == ${hol.getId()}">
+                        <p th:text="${sale.product.name + ' ' + sale.count + '개 ' + ' ' + (sale.count * sale.product.price)} + '원'"></p>
+                    </div>
+                </div>
+            </div>
         </div>
-</div>
+    </div>
 </div>
 
 <!-- Bootstrap core JS-->
