@@ -40,7 +40,9 @@
     <div id="content">
         <div class="container">
             <div >
-                <h3 th:text="${hid}+'번 테이블'"></h3>
+                <h3 th:text="${hid} + '번 테이블'"></h3>
+                <span>최초 주문 일자:</span>
+                <span th:text="${#temporals.format(firstTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
             </div>
             <div class="row">
                 <div style="overflow-y: scroll; width:50%; height:500px;">
@@ -81,17 +83,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="sale : ${saleCartDetailList}">
-                            <th th:text="${sale.getName()}"></th>
-                            <th data-th-text="${#numbers.formatInteger(sale.getPrice()*sale.getCount(), 1, 'COMMA') + '원'}"/>
-                            <th th:text="${sale.getCount()}"></th>
-                            <form th:action="@{'/sale/addEA/'+${hid} + '/' + ${sale.getPid()}}" method="post">
+                        <tr th:each="sale : ${saleCart}">
+                            <th th:text="${sale.product.name}"></th>
+                            <th data-th-text="${#numbers.formatInteger(sale.product.price*sale.count, 1, 'COMMA') + '원'}"/>
+                            <th th:text="${sale.count}"></th>
+                            <form th:action="@{'/sale/addEA/'+${hid} + '/' + ${sale.product.id}}" method="post">
                                 <th><button id="addEA-btn" class="btn btn-primary">+</button></th>
                             </form>
-                            <form th:action="@{'/sale/deleteEA/'+${hid} + '/' + ${sale.getPid()}}" method="post">
+                            <form th:action="@{'/sale/deleteEA/'+${hid} + '/' + ${sale.product.id}}" method="post">
                                 <th><button id="deleteEA-btn" class="btn btn-primary">-</button></th>
                             </form>
-                            <form th:action="@{'/sale/delete/'+${hid} + '/' + ${sale.getPid()}}" method="post">
+                            <form th:action="@{'/sale/delete/'+${hid} + '/' + ${sale.product.id}}" method="post">
                                 <th><button id="delete-btn" class="btn btn-primary">삭제</button></th>
                             </form>
                         </tr>
@@ -101,10 +103,12 @@
                 </div>
             </div>
             <div>
+                <div style="display: flex;justify-content: space-between;">
                 <h1 data-th-text="|총 계산금액 : ${#numbers.formatInteger(totalCost, 1, 'COMMA') + '원'}|"/>
                 <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                     계산하기
                 </button>
+                </div>
                 <!-- Modal -->
                 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog">

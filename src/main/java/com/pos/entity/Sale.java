@@ -1,17 +1,10 @@
 package com.pos.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -21,12 +14,17 @@ import java.time.LocalDateTime;
 public class Sale extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "sale_id")
     private Long id;
-    private int hid;
+
+    @ManyToOne
+    @JoinColumn(name = "hol_id")
+    private Hol hol;
+
     private int price;
 
-    public Sale(int hid, int price) {
-        this.hid = hid;
+    public Sale(Hol hol, int price) {
+        this.hol = hol;
         this.price = price;
     }
 

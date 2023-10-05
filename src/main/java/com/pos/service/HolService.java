@@ -9,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -32,12 +34,17 @@ public class HolService {
 
     @Transactional
     public void deleteHol(int id){
-        List<SaleCart> saleCarts = saleCartRepository.findByHid(id);
+        List<SaleCart> saleCarts = saleCartRepository.findByHolId(id);
 
         if (saleCarts.isEmpty()) {
             holRepository.deleteById(id);
         } else {
 
         }
+    }
+
+    public LocalDateTime findTime(int hid) {
+        Optional<Hol> hol = holRepository.findById(hid);
+        return hol.get().getFirstTime();
     }
 }

@@ -11,7 +11,6 @@ import java.util.List;
 
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Long> {
-    List<Sale> findAllByCreatedDate(LocalDate CreatedAt);
     List<Sale> findAllByCreatedDateBetween(LocalDate start, LocalDate end);
 
 }
