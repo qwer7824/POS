@@ -33,7 +33,7 @@ public class SaleDetailService {
 
 
     public List<SaleDetail> getSaleDetailsById(Long sid){
-        return saleDetailRepository.findBySid(sid);
+        return saleDetailRepository.findBySaleId(sid);
     }
 
     public Sale getSaleById(Long id){

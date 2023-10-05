@@ -52,7 +52,7 @@
                 <th>판매 수량</th>
             </tr>
             <tr th:each="saleDetail : ${saleDetails}">
-                <th th:text="${saleDetail.getName()}"/>
+                <th th:text="${saleDetail.getProduct().name}"/>
                 <th data-th-text="${#numbers.formatInteger(saleDetail.getPrice(), 1, 'COMMA') + '원'}"/>
                 <th th:text="${saleDetail.getCount()}"/>
             </tr>

@@ -1,9 +1,6 @@
 package com.pos.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,17 +14,23 @@ public class SaleDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long sid;
-    private Long pid;
-    private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sale_id")
+    private Sale sale;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     private int price;
     private int count;
 
-    public SaleDetail(Long sid, Long pid, String name, int price, int count) {
-        this.sid = sid;
-        this.pid = pid;
-        this.name = name;
-        this.price = price;
-        this.count = count;
+
+    public SaleDetail(Sale sale, Product product, int price, int count) {
+        this.sale = sale; // sid 속성 설정
+        this.product = product; // product 속성 설정
+        this.price = price; // price 속성 설정
+        this.count = count; // count 속성 설정
     }
 }
