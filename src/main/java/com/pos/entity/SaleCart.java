@@ -1,41 +1,40 @@
 package com.pos.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Getter
 @Setter
 public class SaleCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int hid;
-    private Long pid;
+
+    @ManyToOne
+    @JoinColumn(name = "hol_id")
+    private Hol hol;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     private int count;
 
     public void removeCount(int count){
         this.count = count - 1;
     }
     public void addCount(int count){
-        this.count = count + 1;
+        this.count += count;
     }
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class SaleCartDetail {
-        private Long hid;
-        private Long pid;
-        private String name;
-        private int price;
-        private int count;
+    public static SaleCart createSaleCart(Hol hol , Product product , int count){
+        SaleCart saleCart = new SaleCart();
+        saleCart.setHol(hol);
+        saleCart.setProduct(product);
+        saleCart.setCount(count);
+        return saleCart;
     }
 }
