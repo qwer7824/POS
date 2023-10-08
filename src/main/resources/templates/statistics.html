@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta name="description" content=""/>
+  <meta name="author" content=""/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+  <link href="/bootstrap/css/styles.css" rel="stylesheet"/>
+  <link href="/bootstrap/css/paging.css" rel="stylesheet"/>
+  <title>차트</title>
+</head>
+<script>
+  $(document).ready(function(){
+    getMonthGraph();
+    getWeekGraph();
+  });
+
+  function getWeekGraph() {
+    $.ajax({
+      url: '/api/week',
+      type: 'GET',
+      success: function(response) {
+        WeekChart(response);
+        console.log('response:', response);
+
+      },
+      error: function(xhr, status, error) {
+        console.log('Error:', error);
+      }
+    });
+  }
+
+
+  function getMonthGraph() {
+    $.ajax({
+      url: '/api/month',
+      type: 'GET',
+      success: function(response) {
+        MonthChart(response);
+      },
+      error: function(xhr, status, error) {
+        console.log('Error:', error);
+      }
+    });
+  }
+
+  function WeekChart(chartData) {
+    new Chart(document.getElementById("pie-chart"), {
+      type: 'pie',
+      data: {
+        labels: chartData.map(function (chart) {
+          return chart.day;
+        }),
+        datasets: [{
+          label: "Population (millions)",
+          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#a22841","#f31530"],
+          data: chartData.map(function (chart) {
+            return chart.totalPrice;
+          }),
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+        },
+        legend: {
+          display: true,
+        }
+      }
+    });
+  }
+
+  function MonthChart(chartData) {
+    var ctx = document.getElementById('bar-chart').getContext('2d');
+    var chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: chartData.map(function (chart) {
+          return chart.month + '월';
+        }),
+        datasets: [{
+          label: '월별 매출',
+          data: chartData.map(function (chart) {
+            return chart.totalPrice;
+          }),
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: false,
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+  }
+</script>
+<style>
+
+  #content {
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 100px;
+    padding-bottom: 300px;
+    display: flex;
+  }
+
+  h2 {
+    justify-self: center;
+  }
+</style>
+<body>
+<div id="body-wrapper">
+  <th:block th:replace="fragments/navbar :: navbarFragment"></th:block>
+  <div id="content">
+
+      <div class="col-md-4" style="display: grid;justify-content: start;">
+        <h2>월별 매출</h2>
+        <canvas height="300" id="bar-chart"></canvas>
+        <div>
+          <table id="Month" class="table table-bordered">
+          <thead>
+          <tr>
+            <th>월</th>
+            <th>총 매출</th>
+            <th>주문 수</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="data : ${Month}">
+            <td th:text="${data.month} + ' 월'"></td> <!-- 월(Month) 값 출력 -->
+            <td th:text="${data.totalPrice} + ' 원'"></td> <!-- 총 가격(Total Price) 값 출력 -->
+            <td th:text="${data.totalOrderCount} + ' 개'"></td> <!-- 총 가격(Total Price) 값 출력 -->
+          </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+    <div class="col-md-4" style="display: grid;justify-content: start;">
+      <h2>최근 일주일 매출</h2>
+      <canvas height="250" id="pie-chart"></canvas>
+      <div>
+        <table id="a" class="table table-bordered">
+          <thead>
+          <tr>
+            <th>일자</th>
+            <th>총 매출</th>
+            <th>주문 수</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="data : ${Week}">
+            <td th:text="${data.day} + ' 일'"></td>
+            <td th:text="${data.totalPrice} + ' 원'"></td>
+            <td th:text="${data.totalOrderCount} + ' 개'"></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
