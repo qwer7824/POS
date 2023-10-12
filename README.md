@@ -27,6 +27,10 @@
 -   Database : MySql
 -   OpenAPI : BootStrap , chart.js , Mockaroo
 
+## ⚒️ ERD
+
+<img width="689" alt="스크린샷 2023-10-12 오후 12 00 53" src="https://github.com/qwer7824/POS/assets/8233989/7613a341-b1d0-40da-bccd-e4a67f618ab2">
+
 
 <h3>테이블 수 조정</h3>
 
