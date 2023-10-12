@@ -38,8 +38,6 @@ public class HolService {
 
         if (saleCarts.isEmpty()) {
             holRepository.deleteById(id);
-        } else {
-
         }
     }
 
