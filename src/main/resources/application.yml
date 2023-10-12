@@ -1,9 +1,11 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${SPRING_DATASOURCE_ID}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    url: jdbc:mysql://localhost:3306/pos?characterEncoding=utf8&useUnicode=true&mysqlEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul
+    username: ${JAWSDB_Username}
+    password: ${JAWSDB_Password}
+    url: jdbc:${JAWSDB_URL}
+
+
 
   jpa:
     show-sql: true
@@ -11,4 +13,4 @@ spring:
       hibernate:
         default_batch_fetch_size: 1000
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
