@@ -109,7 +109,7 @@ public class SaleService {
             totalCost += (product.getPrice()*saleCartList.get(i).getCount());
         }
 
-        Sale sale = new Sale(hol, totalCost);
+        Sale sale = new Sale(hid, totalCost);
         saleRepository.save(sale);
 
         for(int i=0;i<saleCartList.size();i++) {

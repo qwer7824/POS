@@ -17,14 +17,12 @@ public class Sale extends BaseEntity {
     @Column(name = "sale_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "hol_id")
-    private Hol hol;
+    private int hid;
 
     private int price;
 
-    public Sale(Hol hol, int price) {
-        this.hol = hol;
+    public Sale(int hid, int price) {
+        this.hid = hid;
         this.price = price;
     }
 
