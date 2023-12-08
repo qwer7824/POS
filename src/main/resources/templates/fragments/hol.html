@@ -11,14 +11,9 @@
         <!-- Responsive navbar-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container px-lg-5">
-                <form method="post" action="/addHol">
-                    <button type="submit" class="btn btn-primary">+</button>
-                </form>
-                <a style="margin-left: 1rem;" class="navbar-brand" th:text="${size}"></a>
-
-                <form method="post" th:action="@{'/deleteHol/' + ${size}}">
-                    <button type="submit" class="btn btn-primary">-</button>
-                </form>
+                <button type="submit" onclick="addHol()" class="btn btn-primary">+</button>
+                <a class="navbar-brand" th:text="${size}"></a>
+                <button type="submit" th:onclick="deleteHol([[${size}]])" class="btn btn-primary">-</button>
             </div>
         </nav>
     </th:block>

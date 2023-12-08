@@ -6,7 +6,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Setter
 @Getter
 public class Hol {
     @Id
@@ -14,5 +13,16 @@ public class Hol {
     int id;
 
     private LocalDateTime firstTime;
+
+    public void addHol(int size){
+        this.id = size+1;
+    }
+    public void timeSet(){
+        this.firstTime = LocalDateTime.now();
+    }
+    public void timeClear(){
+        this.firstTime = null;
+    }
+
  }
 

@@ -10,12 +10,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,20 +30,12 @@ public class HolController {
         model.addAttribute("hols", hols);
         model.addAttribute("size", size);
 
+        Map<Integer,Integer> totalPrice = saleService.getTotalPrice();
         List<SaleCart> saleCart = saleService.findSaleCart();
-        model.addAttribute("saleCart", saleCart);
-        return "main";
-    }
 
-    @PostMapping("/addHol")
-    public String AddHol(){
-        holService.addHol();
-        return "redirect:/";
-    }
-    @PostMapping("/deleteHol/{hid}")
-    public String deleteHol(@PathVariable int hid){
-        holService.deleteHol(hid);
-        return "redirect:/";
+        model.addAttribute("saleCart", saleCart);
+        model.addAttribute("totalPrice", totalPrice);
+        return "main";
     }
 
 

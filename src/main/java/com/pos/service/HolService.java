@@ -28,7 +28,7 @@ public class HolService {
     public void addHol() {
         int size = holList().size();
         Hol hol = new Hol();
-        hol.setId(size+1);
+        hol.addHol(size);
         holRepository.save(hol);
     }
 
@@ -38,6 +38,8 @@ public class HolService {
 
         if (saleCarts.isEmpty()) {
             holRepository.deleteById(id);
+        } else {
+        throw new IllegalStateException("테이블에 주문이 있습니다."); // 예외 발생
         }
     }
 
