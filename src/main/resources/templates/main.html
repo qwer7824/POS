@@ -5,29 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>Heroic Features - Start Bootstrap Template</title>
+    <title>Main</title>
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet"/>
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
-    <style>
-        body, html{
-            margin: 0;
-            padding: 0;
-            height: 100%;
-        }
-        #body-wrapper {
-            min-height: 100%;
-            position: relative;
-        }
-        .col-4 {
-            background-color: #b6d4fe;
-            margin: 10px auto;
-            height: 200px;
-            width: 32%;
-        }
-    </style>
+    <link href="/css/main.css" rel="stylesheet">
+    <script src="/js/main.js"></script>
 </head>
 
 <body>
@@ -37,11 +22,13 @@
     <div id=".content">
         <div class="row text-center">
             <div class="col-4" th:each="hol : ${hols}" th:onclick="|location.href='@{/sale/}'+${hol.getId()}|">
-                <p th:text="${hol.getId()} + '번 테이블'"></p>
-                <hr>
-                <div style="overflow-y: scroll; max-height: calc(100% - 60px);">
-                    <div th:each="sale : ${saleCart}" th:if="${sale.hol.id} == ${hol.getId()}">
-                        <p th:text="${sale.product.name + ' ' + sale.count + '개 ' + ' ' + (sale.count * sale.product.price)} + '원'"></p>
+                <a th:text="${hol.getId()} + '번 테이블'"></a>
+                <div class="priceTotal" th:each="totalprice : ${totalPrice}" th:if="${totalprice.key} == ${hol.getId()}">
+                    <a data-th-text="${#numbers.formatInteger(totalprice.value, 1, 'COMMA') + '원'}"/>
+                </div>
+                <div class="saleCartTitle">
+                    <div class="saleCartList" th:each="sale : ${saleCart}" th:if="${sale.hol.id} == ${hol.getId()}">
+                        <div class="saleCartMenu"><a th:text="${sale.product.name}"></a><a th:text="${sale.count}"></a></div>
                     </div>
                 </div>
             </div>

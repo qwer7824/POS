@@ -7,13 +7,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 public class SaleCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hol_id")
     private Hol hol;
 
@@ -26,15 +25,13 @@ public class SaleCart {
     public void removeCount(int count){
         this.count = count - 1;
     }
-    public void addCount(int count){
-        this.count += count;
+    public void addCount(int count) {
+            this.count = count + 1;
     }
 
-    public static SaleCart createSaleCart(Hol hol , Product product , int count){
-        SaleCart saleCart = new SaleCart();
-        saleCart.setHol(hol);
-        saleCart.setProduct(product);
-        saleCart.setCount(count);
-        return saleCart;
+    public void createSaleCart(Hol hol , Product product){
+            this.hol = hol;
+            this.product = product;
+            this.count = 1;
     }
 }

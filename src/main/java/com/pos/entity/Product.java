@@ -11,7 +11,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Builder
 public class Product {
 
@@ -24,4 +23,14 @@ public class Product {
     private int price;
 
     private int count;
-}
+
+    public void removeProductCount(){
+        this.count = count - 1;
+    }
+    public void addProductCount(){
+        this.count = count + 1;
+    }
+
+    public void updateProduct(SaleCart saleCart) {
+        this.count = count + saleCart.getCount();
+    }}

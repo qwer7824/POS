@@ -3,6 +3,8 @@ package com.pos.service;
 import com.pos.dto.SearchForm;
 import com.pos.entity.Sale;
 import com.pos.entity.SaleDetail;
+import com.pos.exception.CustomException;
+import com.pos.exception.CustomExceptionEnum;
 import com.pos.repository.SaleDetailRepository;
 import com.pos.repository.SaleRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +39,7 @@ public class SaleDetailService {
     }
 
     public Sale getSaleById(Long id){
-        return saleRepository.findById(id).orElseThrow(null);
+        return saleRepository.findById(id).orElseThrow(()-> new CustomException(CustomExceptionEnum.SALE_NOT_FOUND));
     }
 
 

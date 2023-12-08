@@ -1,0 +1,33 @@
+body, html{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+#body-wrapper {
+    min-height: 100%;
+    position: relative;
+}
+.col-4 {
+    background-color: #b6d4fe;
+    margin: 10px auto;
+    height: 200px;
+    width: 32%;
+}
+.priceTotal{
+    border-bottom: solid 1px lightcyan;
+}
+.saleCartTitle{
+    overflow-y: scroll;
+    max-height: calc(100% - 60px);
+    text-align: -webkit-center;
+}
+.saleCartList{
+    width: 50%;
+}
+.saleCartMenu{
+    display: flex;
+    justify-content: space-between;
+}
+.navbar-brand{
+    margin-left: 1rem;
+}

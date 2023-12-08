@@ -1,5 +1,7 @@
 package com.pos.service;
 
+import com.pos.exception.CustomException;
+import com.pos.exception.CustomExceptionEnum;
 import com.pos.entity.*;
 import com.pos.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -32,22 +36,26 @@ public class SaleService {
 
     @Transactional
     public void saleCartAdd(int hid,Long pid) {
-        int count = 1;
-        Product product = productRepository.findById(pid).orElseThrow(null);
+        Product product = productRepository.findById(pid).orElseThrow(() -> new CustomException(CustomExceptionEnum.PRODUCT_NOT_FOUND));
         SaleCart saleCart = saleCartRepository.findByHolIdAndProductId(hid,pid);
-        Hol hol = holRepository.findById(hid).orElseThrow(null);
+        Hol hol = holRepository.findById(hid).orElseThrow(() -> new CustomException(CustomExceptionEnum.HOL_NOT_FOUND));
         LocalDateTime firstTime = hol.getFirstTime();
 
         if(saleCart == null){
-            if (firstTime == null) {
-                hol.setFirstTime(LocalDateTime.now());
+            if (product.getCount() > 0){
+                if (firstTime == null) {
+                    hol.timeSet();
+                }
+                SaleCart newCart = new SaleCart();
+                newCart.createSaleCart(hol ,product);
+                    product.removeProductCount();
+                    saleCartRepository.save(newCart);
             }
-            saleCart = SaleCart.createSaleCart(hol ,product,count);
-            product.setCount(product.getCount() - 1);
-            saleCartRepository.save(saleCart);
         }else {
-            saleCart.addCount(count);
-            product.setCount(product.getCount() - 1);
+            if (product.getCount() > 0){
+                saleCart.addCount(saleCart.getCount());
+                product.removeProductCount();
+            }
         }
     }
 
@@ -56,8 +64,8 @@ public class SaleService {
         // get
         SaleCart saleCart = saleCartRepository.findByHolIdAndProductId(hid,pid);
         // product add
-        Product product = productRepository.findById(pid).orElse(null);
-        product.setCount(product.getCount()+saleCart.getCount());
+        Product product = productRepository.findById(pid).orElseThrow(() -> new CustomException(CustomExceptionEnum.PRODUCT_NOT_FOUND));
+        product.updateProduct(saleCart);
         productRepository.save(product);
         //delete
         saleCartRepository.deleteByHolIdAndProductId(hid,pid);
@@ -65,70 +73,89 @@ public class SaleService {
 
     @Transactional
     public void deleteEASaleCart(int hid, Long pid) {
-        SaleCart saleCart = saleCartRepository.findByHolIdAndProductId(hid,pid);
+        SaleCart saleCart = saleCartRepository.findByHolIdAndProductId(hid, pid);
+        Product product = productRepository.findById(pid).orElseThrow(() -> new CustomException(CustomExceptionEnum.PRODUCT_NOT_FOUND));
 
-        Product product = productRepository.findById(pid).orElse(null);
+        if (saleCart.getCount() == 1) {
+            product.addProductCount();
+            saleCartRepository.deleteByHolIdAndProductId(hid, pid);
+        } else {
+            product.addProductCount();
 
-        if(saleCart.getCount() == 0){
-            saleCartRepository.deleteByHolIdAndProductId(hid,pid);
-        }else{
-            product.setCount(product.getCount()+1);
+            saleCart.removeCount(saleCart.getCount());
+            saleCartRepository.save(saleCart);
             productRepository.save(product);
-
-            SaleCart update = saleCart;
-            update.removeCount(saleCart.getCount());
-            saleCartRepository.save(update);
         }
     }
 
     @Transactional
     public void addEASaleCart(int hid, Long pid) {
-        SaleCart saleCart = saleCartRepository.findByHolIdAndProductId(hid,pid);
-        Product product = productRepository.findById(pid).orElseThrow(null);
+        SaleCart saleCart = saleCartRepository.findByHolIdAndProductId(hid, pid);
+        Product product = productRepository.findById(pid).orElseThrow(() -> new CustomException(CustomExceptionEnum.PRODUCT_NOT_FOUND));
 
-        if(product.getCount() == 0){
+        if (product.getCount() > 0) {
+            product.removeProductCount();
 
-        }else{
-            product.setCount(product.getCount()-1);
+            saleCart.addCount(saleCart.getCount());
+            saleCartRepository.save(saleCart);
             productRepository.save(product);
-
-            SaleCart update = saleCart;
-            update.addCount(saleCart.getCount());
-            saleCartRepository.save(update);
         }
     }
 
     @Transactional
-    public void sale(int hid){
-        int totalCost = 0;
-        Hol hol = holRepository.findById(hid).orElseThrow(null);
+    public void sale(int hid) {
+        Hol hol = holRepository.findById(hid)
+                .orElseThrow(() -> new CustomException(CustomExceptionEnum.HOL_NOT_FOUND));
+
         List<SaleCart> saleCartList = saleCartRepository.findByHolId(hid);
 
-        for(int i=0;i<saleCartList.size();i++){
-            Product product = productRepository.findById(saleCartList.get(i).getProduct().getId()).orElseThrow(null);
-            totalCost += (product.getPrice()*saleCartList.get(i).getCount());
-        }
+        int totalCost = calculateTotalCost(saleCartList);
 
         Sale sale = new Sale(hid, totalCost);
         saleRepository.save(sale);
 
-        for(int i=0;i<saleCartList.size();i++) {
-            Product product = productRepository.findById(saleCartList.get(i).getProduct().getId()).orElseThrow(null);
-            SaleDetail saleDetail = new SaleDetail(sale, product,
-                    product.getPrice(), saleCartList.get(i).getCount());
-            saleDetailRepository.save(saleDetail);
-        }
+        saveSaleDetails(sale, saleCartList);
+
         saleCartRepository.deleteByHolId(hid);
-        hol.setFirstTime(null);
+        hol.timeClear();
     }
 
-    public int calculateTotalCost(List<SaleCart> saleCart) {
-        int totalCost = 0;
+    private void saveSaleDetails(Sale sale, List<SaleCart> saleCartList) {
+        for (SaleCart saleCart : saleCartList) {
+            Product product = productRepository.findById(saleCart.getProduct().getId())
+                    .orElseThrow(() -> new CustomException(CustomExceptionEnum.PRODUCT_NOT_FOUND));
+            SaleDetail saleDetail = new SaleDetail(sale, product,
+                    product.getPrice(), saleCart.getCount());
+            saleDetailRepository.save(saleDetail);
+        }
+    }
 
-        for (SaleCart item : saleCart) {
-            totalCost += item.getProduct().getPrice() * item.getCount();
+    public Map<Integer, Integer> getTotalPrice() {
+        List<SaleCart> saleCarts = saleCartRepository.findAll();
+
+        Map<Integer, Integer> resultMap = new HashMap<>();
+        for (SaleCart saleCart : saleCarts) {
+            int totalPrice = saleCart.getCount() * saleCart.getProduct().getPrice();
+            int tableId = saleCart.getHol().getId();
+
+            if (resultMap.containsKey(tableId)) {
+                int currentTotal = resultMap.get(tableId);
+                resultMap.put(tableId, currentTotal + totalPrice);
+            } else {
+                resultMap.put(tableId, totalPrice);
+            }
         }
 
+        return resultMap;
+    }
+
+    public int calculateTotalCost(List<SaleCart> saleCartList) {
+        int totalCost = 0;
+        for (SaleCart saleCart : saleCartList) {
+            Product product = productRepository.findById(saleCart.getProduct().getId())
+                    .orElseThrow(() -> new CustomException(CustomExceptionEnum.PRODUCT_NOT_FOUND));
+            totalCost += (product.getPrice() * saleCart.getCount());
+        }
         return totalCost;
     }
 }
