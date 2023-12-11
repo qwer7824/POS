@@ -10,107 +10,15 @@
   <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
   <title>차트</title>
+  <script src="/js/statistics.js"></script>
 </head>
-<script>
-  $(document).ready(function(){
-    getMonthGraph();
-    getWeekGraph();
-  });
-
-  function getWeekGraph() {
-    $.ajax({
-      url: '/api/week',
-      type: 'GET',
-      success: function(response) {
-        WeekChart(response);
-        console.log('response:', response);
-
-      },
-      error: function(xhr, status, error) {
-        console.log('Error:', error);
-      }
-    });
-  }
-
-
-  function getMonthGraph() {
-    $.ajax({
-      url: '/api/month',
-      type: 'GET',
-      success: function(response) {
-        MonthChart(response);
-      },
-      error: function(xhr, status, error) {
-        console.log('Error:', error);
-      }
-    });
-  }
-
-  function WeekChart(chartData) {
-    new Chart(document.getElementById("pie-chart"), {
-      type: 'pie',
-      data: {
-        labels: chartData.map(function (chart) {
-          return chart.day;
-        }),
-        datasets: [{
-          label: "Population (millions)",
-          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#a22841","#f31530"],
-          data: chartData.map(function (chart) {
-            return chart.totalPrice;
-          }),
-        }]
-      },
-      options: {
-        title: {
-          display: true,
-        },
-        legend: {
-          display: true,
-        }
-      }
-    });
-  }
-
-  function MonthChart(chartData) {
-    var ctx = document.getElementById('bar-chart').getContext('2d');
-    var chart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: chartData.map(function (chart) {
-          return chart.month + '월';
-        }),
-        datasets: [{
-          label: '월별 매출',
-          data: chartData.map(function (chart) {
-            return chart.totalPrice;
-          }),
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: false,
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
-      }
-    });
-  }
-</script>
 <style>
 
   #content {
     margin-left: 10%;
     margin-right: 10%;
-    margin-top: 100px;
+    margin-top: 30px;
     padding-bottom: 300px;
-    display: flex;
   }
 
   h2 {
@@ -118,60 +26,77 @@
   }
 </style>
 <body>
-<div id="body-wrapper">
+<div id="body-wrapper" style="background-color: #eff3fe">
   <th:block th:replace="fragments/navbar :: navbarFragment"></th:block>
   <div id="content">
+    <div style="display: flex;justify-content: space-around; margin-bottom: 20px;">
+      <div style="background-color: white;border-radius: 15px;padding: 10px; text-align: center;" >
+        <div style="border-bottom: gray solid;font-size: 20px;">
+        <a>월별 매출</a>
+        </div>
+        <canvas width="500" height="300" id="bar-chart"></canvas>
+      </div>
 
-      <div class="col-md-4" style="display: grid;justify-content: start;">
-        <h2>월별 매출</h2>
-        <canvas height="300" id="bar-chart"></canvas>
-        <div>
-          <table id="Month" class="table table-bordered">
-          <thead>
-          <tr>
-            <th>월</th>
-            <th>총 매출</th>
-            <th>주문 수</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr th:each="data : ${Month}">
-            <td th:text="${data.month} + ' 월'"></td> <!-- 월(Month) 값 출력 -->
-            <td th:text="${data.totalPrice} + ' 원'"></td> <!-- 총 가격(Total Price) 값 출력 -->
-            <td th:text="${data.totalOrderCount} + ' 개'"></td> <!-- 총 가격(Total Price) 값 출력 -->
-          </tr>
-          </tbody>
-        </table>
+    <div style="background-color: white;border-radius: 15px;padding: 10px; text-align: center">
+      <div style="border-bottom: gray solid;font-size: 20px;">
+      <a>최근 일주일 매출</a>
+      </div>
+      <canvas width="500" height="300" id="pie-chart"></canvas>
+    </div>
+     </div>
+
+    <div style="display: flex;justify-content: space-around;">
+
+    <div style="background-color: white;border-radius: 15px;padding: 10px; text-align: center; height: 300px;">
+      <div style="border-bottom: gray solid;font-size: 20px; width: 500px;">
+        <a>상품 리스트</a>
+      </div>
+      <div style="overflow-y: scroll;height: 250px;">
+      <table id="products" class="table">
+        <thead>
+        <tr>
+          <th>제품이름</th>
+          <th>가격</th>
+          <th>수량</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+          <td th:text="${product.getName()}"></td>
+          <td th:text="${product.getPrice()}"></td>
+          <td th:text="${product.getCount()}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+      <div style="background-color: white;border-radius: 15px;padding: 10px; text-align: center; height: 300px;">
+        <div style="border-bottom: gray solid;font-size: 20px; width: 500px;">
+          <a>최근 한달 판매순위</a>
+        </div>
+        <div style="overflow-y: scroll;height: 250px;">
+          <table class="table">
+            <thead>
+            <tr>
+              <th>제품이름</th>
+              <th>가격</th>
+              <th>수량</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="topProduct : ${topProducts}">
+              <td th:text="${topProduct.getProductName()}"></td>
+              <td th:text="${topProduct.getTotalSalesAmount()}"></td>
+              <td th:text="${topProduct.getTotalSoldCount()}"></td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-
-    <div class="col-md-4" style="display: grid;justify-content: start;">
-      <h2>최근 일주일 매출</h2>
-      <canvas height="250" id="pie-chart"></canvas>
-      <div>
-        <table id="a" class="table table-bordered">
-          <thead>
-          <tr>
-            <th>일자</th>
-            <th>총 매출</th>
-            <th>주문 수</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr th:each="data : ${Week}">
-            <td th:text="${data.day} + ' 일'"></td>
-            <td th:text="${data.totalPrice} + ' 원'"></td>
-            <td th:text="${data.totalOrderCount} + ' 개'"></td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
 
 
     </div>
   </div>
 </div>
-
 </body>
 </html>
