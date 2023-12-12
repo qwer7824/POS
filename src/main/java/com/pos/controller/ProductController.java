@@ -3,6 +3,7 @@ package com.pos.controller;
 import com.pos.dto.ProductDto;
 import com.pos.entity.Product;
 import com.pos.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 @Controller
 @Slf4j
@@ -28,8 +31,11 @@ public class ProductController {
     }
 
     @PostMapping(value = "/new")
-    public String addNewProduct(@Validated @ModelAttribute("product") ProductDto product) {
+    public String addNewProduct(@Valid @ModelAttribute("product") ProductDto product, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "addNewProductForm";
+        }
         productService.addNewProduct(product);
-        return "redirect:statistics";
+        return "redirect:/statistics";
     }
 }
