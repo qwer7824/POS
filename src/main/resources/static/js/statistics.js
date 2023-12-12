@@ -2,7 +2,27 @@ $(document).ready(function(){
     getMonthGraph();
     getWeekGraph();
 });
+function editModal(id) {
+    $.ajax({
+        url: "/product/" + id,
+        type: "GET",
+        success: function (response) {
+            const product = response;
 
+            // 모달 창 열기
+            $('#editModal').modal('show');
+
+            // 데이터 자동 채우기
+            $('#id').val(product.id);
+            $('#name').val(product.name);
+            $('#price').val(product.price);
+            $('#count').val(product.count);
+        },
+        error: function () {
+            // 에러 시 처리할 로직
+        }
+    });
+}
 function getWeekGraph() {
     $.ajax({
         url: '/api/week',

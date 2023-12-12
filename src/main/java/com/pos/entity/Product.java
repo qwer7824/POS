@@ -1,6 +1,7 @@
 package com.pos.entity;
 
 
+import com.pos.dto.ProductDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,6 +32,15 @@ public class Product {
         this.count = count + 1;
     }
 
-    public void updateProduct(SaleCart saleCart) {
+    public void updateCount(SaleCart saleCart) {
         this.count = count + saleCart.getCount();
-    }}
+    }
+
+    public void updateProduct(ProductDto productDto){
+        this.name = productDto.getName();
+        this.count = productDto.getCount();
+        this.price = productDto.getPrice();
+    }
+
+
+}

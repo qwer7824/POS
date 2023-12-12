@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ProductDto {
+    private Long id;
     @NotBlank
     private String name;
     @Min(1)

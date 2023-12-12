@@ -2,6 +2,7 @@ package com.pos.controller;
 
 import com.pos.dto.ProductDto;
 import com.pos.entity.Product;
+import com.pos.repository.ProductRepository;
 import com.pos.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -9,12 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 
 @Controller
@@ -23,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductRepository productRepository;
 
     @GetMapping(value = "/new") // 판매상품 등록 페이지
     public String addNewProductForm(Model model){
@@ -37,5 +36,19 @@ public class ProductController {
         }
         productService.addNewProduct(product);
         return "redirect:/statistics";
+    }
+
+    @PostMapping(value = "/edit")
+    public String editNewProduct(@Valid @ModelAttribute("product") ProductDto productdto,BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "redirect:/statistics";
+        }
+       productService.updateProduct(productdto);
+        return "redirect:/statistics";
+    }
+    @GetMapping(value = "/product/{id}")
+    @ResponseBody
+    public Optional<Product> getProduct(@PathVariable("id") Long id){
+        return productRepository.findById(id);
     }
 }

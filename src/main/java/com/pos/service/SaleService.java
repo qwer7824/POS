@@ -65,7 +65,7 @@ public class SaleService {
         SaleCart saleCart = saleCartRepository.findByHolIdAndProductId(hid,pid);
         // product add
         Product product = productRepository.findById(pid).orElseThrow(() -> new CustomException(CustomExceptionEnum.PRODUCT_NOT_FOUND));
-        product.updateProduct(saleCart);
+        product.updateCount(saleCart);
         productRepository.save(product);
         //delete
         saleCartRepository.deleteByHolIdAndProductId(hid,pid);

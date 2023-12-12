@@ -27,6 +27,7 @@ public class StatisticsController{
         List<Product> Products = productService.productList();
         List<TopSoldProductDTO> TopProducts = chartService.getTopSoldProducts();
 
+        model.addAttribute("product", new Product());
         model.addAttribute("products", Products);
         model.addAttribute("topProducts", TopProducts);
         model.addAttribute("Month", Month);

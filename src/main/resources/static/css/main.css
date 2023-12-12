@@ -7,11 +7,16 @@ body, html{
     min-height: 100%;
     position: relative;
 }
+.row{
+    margin-right:0;
+    margin-left:0;
+}
 .col-4 {
     background-color: #b6d4fe;
     margin: 10px auto;
     height: 200px;
     width: 32%;
+    border-radius: 25px;
 }
 .priceTotal{
     border-bottom: solid 1px lightcyan;

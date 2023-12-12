@@ -1,0 +1,49 @@
+#content {
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 30px;
+    padding-bottom: 300px;
+}
+
+h2 {
+    justify-self: center;
+}
+#body-wrapper{
+    background-color: #eff3fe;
+}
+
+.partition{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+.partition2{
+    display: flex;
+    justify-content: space-around;
+}
+.unitBox{
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+    text-align: center;
+}
+.unitBox2{
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+    text-align: center;
+    height: 300px;
+}
+.boxSolid{
+    border-bottom: gray solid;
+    font-size: 20px;
+}
+.boxSolid2{
+    border-bottom: gray solid;
+    font-size: 20px;
+    width: 500px;
+}
+.scrollBox{
+    overflow-y: scroll;
+    height: 250px;
+}
