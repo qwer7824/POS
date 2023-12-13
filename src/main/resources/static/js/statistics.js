@@ -38,6 +38,20 @@ function getWeekGraph() {
     });
 }
 
+function deleteProduct() {
+    const Pid = $('#id').val();
+    $.ajax({
+        url: "/product/" + Pid,
+        type: "DELETE",
+        success: function () {
+            alert('삭제가 완료되었습니다.');
+            location.reload();
+        },
+        error: function () {
+            // 에러 시 처리할 로직
+        }
+    });
+}
 
 function getMonthGraph() {
     $.ajax({

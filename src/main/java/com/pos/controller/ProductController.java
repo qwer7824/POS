@@ -21,7 +21,6 @@ import java.util.Optional;
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductRepository productRepository;
 
     @GetMapping(value = "/new") // 판매상품 등록 페이지
     public String addNewProductForm(Model model){
@@ -49,6 +48,12 @@ public class ProductController {
     @GetMapping(value = "/product/{id}")
     @ResponseBody
     public Optional<Product> getProduct(@PathVariable("id") Long id){
-        return productRepository.findById(id);
+        return productService.getProduct(id);
+    }
+
+    @DeleteMapping("/product/{id}")
+    @ResponseBody
+    public void deleteProduct(@PathVariable("id") Long id){
+        productService.deleteProduct(id);
     }
 }

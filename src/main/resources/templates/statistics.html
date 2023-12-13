@@ -55,7 +55,7 @@
         <tbody>
         <tr th:each="product : ${products}" th:attr="onclick='editModal(\'' + ${product.id} + '\')'">
           <td th:text="${product.getName()}"></td>
-          <td th:text="${product.getPrice()}"></td>
+          <td data-th-text="${#numbers.formatInteger(product.getPrice(), 1, 'COMMA') + '원'}"></td>
           <td th:text="${product.getCount()}"></td>
         </tr>
         </tbody>
@@ -78,7 +78,7 @@
             <tbody>
             <tr th:each="topProduct : ${topProducts}">
               <td th:text="${topProduct.getProductName()}"></td>
-              <td th:text="${topProduct.getTotalSalesAmount()}"></td>
+              <td th:text="${topProduct.getTotalSalesAmount()} + '원'"></td>
               <td th:text="${topProduct.getTotalSoldCount()}"></td>
             </tr>
             </tbody>
@@ -115,7 +115,8 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary" id="editActivityButton">Edit</button>
+              <button type="button" class="btn btn-danger" id="deleteButton" onclick="deleteProduct()">Delete</button>
+              <button type="submit" class="btn btn-primary" id="editButton">Edit</button>
             </div>
           </form>
         </div>

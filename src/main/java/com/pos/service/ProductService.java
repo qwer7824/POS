@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,5 +33,13 @@ public class ProductService {
         Product product = productRepository.findById(productdto.getId()).orElseThrow(() -> new CustomException(CustomExceptionEnum.PRODUCT_NOT_FOUND));
         product.updateProduct(productdto);
         productRepository.save(product);
+    }
+
+    public Optional<Product> getProduct(Long id) {
+        return productRepository.findById(id);
+    }
+
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
     }
 }
